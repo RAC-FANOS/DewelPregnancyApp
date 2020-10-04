@@ -1,3 +1,4 @@
+import 'package:dewel/models/article.dart';
 import 'package:flutter/material.dart';
 import 'package:dewel/screens/final_detail.dart';
 import 'package:dewel/screens/utility.dart';
@@ -8,6 +9,7 @@ class AfterPregnancy extends StatefulWidget {
 }
 
 class _AfterPregnancy extends State<AfterPregnancy> {
+  List<Article> articles = loadArticles('after');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,18 +30,18 @@ class _AfterPregnancy extends State<AfterPregnancy> {
         ),
         body: Scaffold(
           body: ListView.builder(
-            itemCount: Utility.PreListValues.length,
+            itemCount: articles.length,
             itemBuilder: (context, index) {
               return Card(
                 child: Padding(
                     padding: EdgeInsets.all(10.0),
                     child: ListTile(
                       onTap: () {
-                        goToFinalDetail(Utility.PreListValues[index],
-                            Utility.PreListContent[index]);
+                        goToFinalDetail(
+                            articles[index].title, articles[index].content);
                       },
                       title: Text(
-                        Utility.PreListValues[index],
+                        articles[index].title,
                         style: TextStyle(
                           fontSize: 20.0,
                         ),
@@ -90,18 +92,19 @@ class DataSearch extends SearchDelegate<String> {
     }
 
     final suggestionList = query.isEmpty
-        ? Utility.PreListValues
-        : Utility.PreListValues.where((p) => p.toLowerCase().contains(query))
+        ? loadArticles('after')
+        : loadArticles('after')
+            .where((p) => p.title.toLowerCase().contains(query))
             .toList();
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
           onTap: () {
             showResults(context);
             searchNavigate(
-                suggestionList[index], Utility.PreListContent[index]);
+                suggestionList[index].title, suggestionList[index].content);
           },
           title: Text(
-            suggestionList[index],
+            suggestionList[index].title,
           )),
       itemCount: suggestionList.length,
     );
@@ -115,8 +118,9 @@ class DataSearch extends SearchDelegate<String> {
     }
 
     final suggestionList = query.isEmpty
-        ? Utility.PreListValues
-        : Utility.PreListValues.where((p) => p.toLowerCase().contains(query))
+        ? loadArticles('after')
+        : loadArticles('after')
+            .where((p) => p.title.toLowerCase().contains(query))
             .toList();
     return suggestionList.isEmpty
         ? Center(child: Text('No Results Found...'))
@@ -125,11 +129,11 @@ class DataSearch extends SearchDelegate<String> {
             itemBuilder: (context, index) => ListTile(
                 onTap: () {
                   showResults(context);
-                  searchNavigate(
-                      suggestionList[index], Utility.PreListContent[index]);
+                  searchNavigate(suggestionList[index].title,
+                      suggestionList[index].content);
                 },
                 title: Text(
-                  suggestionList[index],
+                  suggestionList[index].title,
                 )),
           );
   }
