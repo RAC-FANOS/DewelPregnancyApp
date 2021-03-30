@@ -347,7 +347,7 @@ class _DuringPregnancy extends State<DuringPregnancy> {
 }
 
 class DataSearch extends SearchDelegate<String> {
-  _DuringPregnancy pre = _DuringPregnancy();
+  _DuringPregnancy during = _DuringPregnancy();
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -386,10 +386,11 @@ class DataSearch extends SearchDelegate<String> {
     }
 
     final suggestionList = query.isEmpty
-        ? Utility.duringSearchSuggestions
-        : Utility.duringSearchTitles
-            .where((p) => p.toLowerCase().contains(query))
+        ? Utility.duringlists
+        : Utility.duringlists
+            .where((p) => p.value.toLowerCase().contains(query))
             .toList();
+
     return suggestionList.isEmpty
         ? Center(child: Text('No Results Found...'))
         : ListView.builder(
@@ -397,11 +398,22 @@ class DataSearch extends SearchDelegate<String> {
             itemBuilder: (context, index) => ListTile(
                 onTap: () {
                   showResults(context);
-                  searchNavigate(suggestionList[index],
-                      Utility.duringSearchContent[index]);
+                  if (suggestionList[index].value ==
+                      '	How much weight should I expect to gain?') {
+                    during.goToHowMuchWeightDetailPage();
+                  } else if (suggestionList[index].value ==
+                      '	What supplement are given during pregnancy other than nutrition?') {
+                    during.goToWhatSupplementDetailPage();
+                  } else if (suggestionList[index].value ==
+                      'Getting the nutrients, you need during pregnancy') {
+                    during.goToNutrientsDetailPage();
+                  } else {
+                    searchNavigate(suggestionList[index].value,
+                        suggestionList[index].content);
+                  }
                 },
                 title: Text(
-                  suggestionList[index],
+                  suggestionList[index].value,
                 )),
           );
   }
