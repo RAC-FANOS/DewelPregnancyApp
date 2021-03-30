@@ -15,7 +15,7 @@ class _PrePregnancy extends State<PrePregnancy> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Pre Pregnancy'),
+          title: Text('ቅድመ-እርግዝና'),
           backgroundColor: Color.fromARGB(255, 190, 0, 99),
           actions: <Widget>[
             IconButton(
@@ -27,18 +27,18 @@ class _PrePregnancy extends State<PrePregnancy> {
         ),
         body: Scaffold(
           body: ListView.builder(
-            itemCount: Utility.PreListValues.length,
+            itemCount: Utility.prelists.length,
             itemBuilder: (context, index) {
               return Card(
                 child: Padding(
                     padding: EdgeInsets.all(10.0),
                     child: ListTile(
                       onTap: () {
-                        goToFinalDetail(Utility.PreListValues[index],
-                            Utility.PreListContent[index]);
+                        goToFinalDetail(Utility.prelists[index].value,
+                            Utility.prelists[index].content);
                       },
                       title: Text(
-                        Utility.PreListValues[index],
+                        Utility.prelists[index].value,
                         style: TextStyle(
                           fontSize: 20.0,
                         ),
@@ -89,18 +89,20 @@ class DataSearch extends SearchDelegate<String> {
     }
 
     final suggestionList = query.isEmpty
-        ? Utility.PreListValues
-        : Utility.PreListValues.where((p) => p.toLowerCase().contains(query))
+        ? Utility.prelists
+        : Utility.prelists
+            .where((p) => p.value.toLowerCase().contains(query))
             .toList();
+
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
           onTap: () {
             showResults(context);
             searchNavigate(
-                suggestionList[index], Utility.PreListContent[index]);
+                suggestionList[index].value, suggestionList[index].content);
           },
           title: Text(
-            suggestionList[index],
+            suggestionList[index].value,
           )),
       itemCount: suggestionList.length,
     );
@@ -114,8 +116,9 @@ class DataSearch extends SearchDelegate<String> {
     }
 
     final suggestionList = query.isEmpty
-        ? Utility.searchPrelist
-        : Utility.PreListValues.where((p) => p.toLowerCase().contains(query))
+        ? Utility.prelists.getRange(0, 4).toList()
+        : Utility.prelists
+            .where((p) => p.value.toLowerCase().contains(query))
             .toList();
     return suggestionList.isEmpty
         ? Center(child: Text('No Results Found...'))
@@ -124,11 +127,11 @@ class DataSearch extends SearchDelegate<String> {
             itemBuilder: (context, index) => ListTile(
                 onTap: () {
                   showResults(context);
-                  searchNavigate(
-                      suggestionList[index], Utility.PreListContent[index]);
+                  searchNavigate(suggestionList[index].value,
+                      suggestionList[index].content);
                 },
                 title: Text(
-                  suggestionList[index],
+                  suggestionList[index].value,
                 )),
           );
   }
